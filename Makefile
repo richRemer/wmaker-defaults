@@ -5,6 +5,7 @@ install: gsettings
 	grep -q \\.wm_profile $(HOME)/.profile || echo ". .wm_profile" >> $(HOME)/.profile
 
 gsettings:
+	gsettings set org.gnome.desktop.wm.preferences resize-with-right-button true
 	gsettings set org.gnome.Terminal.Legacy.Settings headerbar false
 
 .PHONY: default install
