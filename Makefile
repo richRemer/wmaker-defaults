@@ -7,5 +7,6 @@ install: gsettings
 gsettings:
 	gsettings set org.gnome.desktop.wm.preferences resize-with-right-button true
 	gsettings set org.gnome.Terminal.Legacy.Settings headerbar false
+	gsettings set org.gnome.Terminal.Legacy.Settings confirm-close false
 
 .PHONY: default install
