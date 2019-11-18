@@ -1,3 +1,41 @@
-xinput set-prop 13 303 1
-xinput set-prop 13 311 1
+declare touchpad="SynPS/2 Synaptics TouchPad"
 
+list-props () {
+    local device="$1"
+    local desc id name
+
+    xinput list-props "$1" | tail -n+2 | grep -v Default | while read desc; do
+        name=$(sed -e 's/\(.*\)(.*/\1/' <<< "$desc")
+        id=$(sed -e 's/.*(//' -e 's/).*//' <<< "$desc")
+        echo $id $name
+    done
+}
+
+prop-id () {
+    local device="$1"
+    local prop="$2"
+    local id
+
+    id=$(list-props "$device"  | grep "$prop" | cut -d" " -f1)
+
+    test "$id" && echo $id
+}
+
+set-prop () {
+    local device="$1"
+    local prop="$2"
+    local value="$3"
+    local id
+
+    if ! id=$(prop-id "$device" "$prop"); then
+        echo "could not identify '$prop' property for device '$device'" >&2
+        return 1
+    else
+        xinput set-prop "$device" "$id" "$value"
+    fi
+}
+
+set-prop "$touchpad" "libinput Natural Scrolling Enabled" 1
+set-prop "$touchpad" "libinput Tapping Enabled" 1
+set-prop "$touchpad" "libinput Disable While Typing Enabled" 0
+set-prop "$touchpad" "libinput Accel Speed" 0.25
